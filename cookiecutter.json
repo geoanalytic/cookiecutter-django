@@ -17,6 +17,7 @@
   "windows": "n",
   "use_pycharm": "n",
   "use_docker": "n",
+  "postgresql_version":"10.3",
   "js_task_runner": [
     "None",
     "Gulp",
