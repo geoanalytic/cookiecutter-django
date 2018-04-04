@@ -22,20 +22,20 @@ EXPOSE 5432
 
 # Run any additional tasks here that are too tedious to put in
 # this dockerfile directly.
-ADD env-data.sh /env-data.sh
-ADD setup.sh /setup.sh
+COPY ./compose/production/docker-postgis-develop/env-data.sh /
+COPY ./compose/production/docker-postgis-develop/setup.sh /
 RUN chmod +x /setup.sh
 RUN /setup.sh
 
 # We will run any commands in this when the container starts
-ADD docker-entrypoint.sh /docker-entrypoint.sh
-ADD setup-conf.sh /
-ADD setup-database.sh /
-ADD setup-pg_hba.sh /
-ADD setup-replication.sh /
-ADD setup-ssl.sh /
-ADD setup-user.sh /
-ADD postgresql.conf /tmp/postgresql.conf
+COPY ./compose/production/docker-postgis-develop/docker-entrypoint.sh /
+COPY ./compose/production/docker-postgis-develop/setup-conf.sh /
+COPY ./compose/production/docker-postgis-develop/setup-database.sh /
+COPY ./compose/production/docker-postgis-develop/setup-pg_hba.sh /
+COPY ./compose/production/docker-postgis-develop/setup-replication.sh /
+COPY ./compose/production/docker-postgis-develop/setup-ssl.sh /
+COPY ./compose/production/docker-postgis-develop/setup-user.sh /
+COPY ./compose/production/docker-postgis-develop/postgresql.conf /tmp/
 RUN chmod +x /docker-entrypoint.sh
 
 # Optimise postgresql
