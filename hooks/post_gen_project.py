@@ -192,10 +192,11 @@ def set_django_admin_url(file_path):
 
 
 def generate_postgres_user():
-    return generate_random_string(
+    user = generate_random_string(
         length=32,
         using_ascii_letters=True
     )
+    return user.lower()
 
 
 def set_postgres_user(file_path,

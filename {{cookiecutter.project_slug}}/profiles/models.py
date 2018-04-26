@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 from django.contrib.postgres.fields import ArrayField
 # Geopaparrazi profiles model
 
@@ -81,7 +81,8 @@ class Otherfiles(models.Model):
     modifieddate = models.DateTimeField(auto_now_add=True) 
     url = models.URLField(blank=True)
     size = models.CharField(max_length=30, blank=True, null=True)
-
+    location = models.PointField(blank=True,null=True)
+    
     def __str__(self):
         return self.path
         

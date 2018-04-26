@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM odoku/geopython:3.6
 
 ENV PYTHONUNBUFFERED 1
 
@@ -9,7 +9,7 @@ RUN apk update \
   # Pillow dependencies
   && apk add jpeg-dev zlib-dev freetype-dev lcms2-dev openjpeg-dev tiff-dev tk-dev tcl-dev \
   # CFFI dependencies
-  && apk add libffi-dev openssl-dev py-cffi
+  && apk add libffi-dev py-cffi
 
 RUN addgroup -S django \
     && adduser -S -G django django
