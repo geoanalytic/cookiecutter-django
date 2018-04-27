@@ -1,4 +1,4 @@
-FROM odoku/geopython:3.6
+FROM bungalowbill/docker-geopython:Python3.6
 
 ENV PYTHONUNBUFFERED 1
 
