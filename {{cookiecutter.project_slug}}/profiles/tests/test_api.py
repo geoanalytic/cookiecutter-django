@@ -228,4 +228,4 @@ class GetAllProfiles(APITestCase):
     def test_get_invalid_profile(self):
         response = self.get(reverse('profile-detail', kwargs={'pk': 30}))
         self.response_404(response)
-        
+
