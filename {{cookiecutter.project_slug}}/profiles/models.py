@@ -15,10 +15,14 @@ class Project(models.Model):
     """
     path = models.CharField(max_length=100, blank=True, default='')
     modifieddate = models.DateTimeField(auto_now_add=True)    
-    url = models.URLField(blank=True)
+    url = models.FileField(upload_to='projects/') 
     uploadurl = models.URLField(blank=True)
     size = models.CharField(max_length=30, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    
+    def save(self, *args, **kwargs):
+        self.size = self.url.size
+        super().save(*args, **kwargs)
              
     def __str__(self):
         return self.path
@@ -42,9 +46,13 @@ class Tag(models.Model):
     """
     path = models.CharField(max_length=100, blank=True, default='')    
     modifieddate = models.DateTimeField(auto_now_add=True) 
-    url = models.URLField(blank=True)
+    url = models.FileField(upload_to='tags/')
     size = models.CharField(max_length=30, blank=True, null=True)       
 
+    def save(self, *args, **kwargs):
+        self.size = self.url.size
+        super().save(*args, **kwargs)
+        
     def __str__(self):
         return self.path
 
@@ -53,9 +61,13 @@ class Basemap(models.Model):
     """
     path = models.CharField(max_length=100, blank=True, default='')    
     modifieddate = models.DateTimeField(auto_now_add=True) 
-    url = models.URLField(blank=True)
+    url = models.FileField(upload_to='basemaps/')
     size = models.CharField(max_length=30, blank=True, null=True)   
-    
+
+    def save(self, *args, **kwargs):
+        self.size = self.url.size
+        super().save(*args, **kwargs)
+            
     def __str__(self):
         return self.path
 
@@ -66,10 +78,14 @@ class Spatialitedbs(models.Model):
     """
     path = models.CharField(max_length=100, blank=True, default='')    
     modifieddate = models.DateTimeField(auto_now_add=True) 
-    url = models.URLField(blank=True)
+    url = models.FileField(upload_to='spatialitedbs/')
     size = models.CharField(max_length=30, blank=True, null=True)
     uploadurl = models.URLField(blank=True)
     visible = ArrayField(models.CharField(max_length=30))
+
+    def save(self, *args, **kwargs):
+        self.size = self.url.size
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.path
@@ -79,9 +95,13 @@ class Otherfiles(models.Model):
     """
     path = models.CharField(max_length=100, blank=True, default='')    
     modifieddate = models.DateTimeField(auto_now_add=True) 
-    url = models.URLField(blank=True)
+    url = models.FileField(upload_to='otherfiles/')
     size = models.CharField(max_length=30, blank=True, null=True)
     location = models.PointField(blank=True,null=True)
+
+    def save(self, *args, **kwargs):
+        self.size = self.url.size
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return self.path
