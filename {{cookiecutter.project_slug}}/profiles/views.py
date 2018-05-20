@@ -26,7 +26,8 @@ class MyProfiles(generics.RetrieveAPIView):
             obj = get_object_or_404(queryset, owner=self.request.user)
         else:
             User = get_user_model()
-            obj = get_object_or_404(queryset, owner=User.objects.get(username="demo"))
+            demowner = get_object_or_404(User, username="demo")
+            obj = get_object_or_404(queryset, owner=demowner)
         return obj
 
 class ProfileList(generics.ListCreateAPIView):
