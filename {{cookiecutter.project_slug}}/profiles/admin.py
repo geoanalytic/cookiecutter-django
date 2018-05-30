@@ -18,6 +18,9 @@ admin.site.register(UserProject, UserProjectAdmin)
 admin.site.register(Tag)
 admin.site.register(Basemap)
 admin.site.register(Spatialitedbs)
-admin.site.register(Otherfiles)
+
+# the Otherfiles model contains a spatial field (location) so we need a GeoAdmin method
+# note - check that OpenLayers.js is served from a HTTPS CDN or this will fail in production
+admin.site.register(Otherfiles, admin.OSMGeoAdmin)
 admin.site.register(Profile)
 admin.site.register(ProfileSet)
