@@ -1,39 +1,20 @@
-Cookiecutter Django
+Cookiecutter Geopaparazzi Reference Server
 =======================
 
-.. image:: https://travis-ci.org/pydanny/cookiecutter-django.svg?branch=master
-    :target: https://travis-ci.org/pydanny/cookiecutter-django?branch=master
-    :alt: Build Status
-
-.. image:: https://pyup.io/repos/github/pydanny/cookiecutter-django/shield.svg
-    :target: https://pyup.io/repos/github/pydanny/cookiecutter-django/
-    :alt: Updates
-
-.. image:: https://badges.gitter.im/Join Chat.svg
-    :target: https://gitter.im/pydanny/cookiecutter-django?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-
-.. image:: https://www.codetriage.com/pydanny/cookiecutter-django/badges/users.svg
-    :target: https://www.codetriage.com/pydanny/cookiecutter-django
-    :alt: Code Helpers Badge
-
-Powered by Cookiecutter_, Cookiecutter Django is a framework for jumpstarting
-production-ready Django projects quickly.
+Powered by Cookiecutter-Django_, Cookiecutter Geopaparazzi Reference Server is a framework for jumpstarting
+production-ready Geopaparazzi cloud projects quickly.
 
 * Documentation: https://cookiecutter-django.readthedocs.io/en/latest/
 * See Troubleshooting_ for common errors and obstacles
-* If you have problems with Cookiecutter Django, please open issues_ don't send
+* If you have problems with Cookiecutter Geopaparazzi Server, please open issues_ don't send
   emails to the maintainers.
-* Need quick professional paid support? Contact `support@cookiecutter.io`_.
-  This includes configuring your servers, fixing bugs, reviewing your code and
-  everything in between.
 
-.. _cookiecutter: https://github.com/audreyr/cookiecutter
+.. _cookiecutter-django: https://github.com/pydanny/cookiecutter-django
 
 .. _Troubleshooting: https://cookiecutter-django.readthedocs.io/en/latest/troubleshooting.html
 
-.. _528: https://github.com/pydanny/cookiecutter-django/issues/528#issuecomment-212650373
-.. _issues: https://github.com/pydanny/cookiecutter-django/issues/new
-.. _support@cookiecutter.io: support@cookiecutter.io
+.. _issues: https://github.com/geoanalytic/cookiecutter-geopaparazzi-server/issues/new
+
 
 Features
 ---------
@@ -54,7 +35,7 @@ Features
 * Procfile_ for deploying to Heroku
 * Instructions for deploying to PythonAnywhere_
 * Run tests with unittest or py.test
-* Customizable PostgreSQL version
+* Uses PostGIS/PostgreSQL for spatial database functionality
 
 .. _`maintained Foundation fork`: https://github.com/Parbhat/cookiecutter-django-foundation
 
@@ -93,37 +74,6 @@ Constraints
 * Uses PostgreSQL everywhere (9.2+)
 * Environment variables for configuration (This won't work with Apache/mod_wsgi except on AWS ELB).
 
-Support this Project!
-----------------------
-
-This project is run by volunteers. Please support them in their efforts to maintain and improve Cookiecutter Django:
-
-* https://www.patreon.com/danielroygreenfeld: Project lead. Expertise in AWS ELB and Django.
-
-Projects that provide financial support to the maintainers:
-
-Two Scoops of Django 1.11
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. image:: https://cdn.shopify.com/s/files/1/0304/6901/products/tsd-111-alpha_medium.jpg?v=1499531513
-   :name: Two Scoops of Django 1.11 Cover
-   :align: center
-   :alt: Two Scoops of Django
-   :target: http://twoscoopspress.com/products/two-scoops-of-django-1-11
-
-Two Scoops of Django is the best dessert-themed Django reference in the universe
-
-pyup
-~~~~~~~~~~~~~~~~~~
-
-.. image:: https://pyup.io/static/images/logo.png
-   :name: pyup
-   :align: center
-   :alt: pyup
-   :target: https://pyup.io/
-
-Pyup brings you automated security and dependency updates used by Google and other organizations. Free for open source projects!
-
 Usage
 ------
 
@@ -136,64 +86,54 @@ First, get Cookiecutter. Trust me, it's awesome::
 
 Now run it against this repo::
 
-    $ cookiecutter https://github.com/pydanny/cookiecutter-django
+    $ cookiecutter https://github.com/geoanalytic/cookiecutter-geopaparazzi-server
 
 You'll be prompted for some values. Provide them, then a Django project will be created for you.
 
-**Warning**: After this point, change 'Daniel Greenfeld', 'pydanny', etc to your own information.
+**Warning**: After this point, change 'David Currie', 'dave', etc to your own information.
 
 Answer the prompts with your own desired options_. For example::
 
-    Cloning into 'cookiecutter-django'...
-    remote: Counting objects: 550, done.
-    remote: Compressing objects: 100% (310/310), done.
-    remote: Total 550 (delta 283), reused 479 (delta 222)
-    Receiving objects: 100% (550/550), 127.66 KiB | 58 KiB/s, done.
-    Resolving deltas: 100% (283/283), done.
-    project_name [Project Name]: Reddit Clone
-    project_slug [reddit_clone]: reddit
-    author_name [Daniel Roy Greenfeld]: Daniel Greenfeld
-    email [you@example.com]: pydanny@gmail.com
-    description [A short description of the project.]: A reddit clone.
-    domain_name [example.com]: myreddit.com
-    version [0.1.0]: 0.0.1
-    timezone [UTC]: America/Los_Angeles
-    use_whitenoise [y]: n
-    use_celery [n]: y
-    use_mailhog [n]: n
-    use_sentry_for_error_reporting [y]: y
-    use_pycharm [n]: y
-    windows [n]: n
-    use_docker [y]: n
-    use_heroku [n]: y
-    use_compressor [n]: y
-    Select postgresql_version:
-    1 - 10.3
-    2 - 10.2
-    3 - 10.1
-    4 - 9.6
-    5 - 9.5
-    6 - 9.4
-    7 - 9.3
-    Choose from 1, 2, 3, 4 [1]: 1
-    Select js_task_runner:
-    1 - Gulp
-    2 - Grunt
-    3 - None
-    Choose from 1, 2, 3, 4 [1]: 1
-    custom_bootstrap_compilation [n]: n
-    Select open_source_license:
-    1 - MIT
-    2 - BSD
-    3 - GPLv3
-    4 - Apache Software License 2.0
-    5 - Not open source
-    Choose from 1, 2, 3, 4, 5 [1]: 1
-    keep_local_envs_in_vcs [y]: y
+$ cookiecutter https://github.com/geoanalytic/cookiecutter-geopaparazzi-server.git
+project_name [Geopaparazzi Reference Server]: 
+project_slug [geopaparazzi_reference_server]: 
+description [A RESTful server for Geopaparazzi cloud profiles, based on GeoDjango and PostGIS]: 
+author_name [David Currie]: 
+email [david-currie@example.com]:              
+domain_name [example.com]: 
+version [0.1.0]: 
+Select open_source_license:
+1 - MIT
+2 - BSD
+3 - GPLv3
+4 - Apache Software License 2.0
+5 - Not open source
+Choose from 1, 2, 3, 4, 5 [1]: 
+timezone [UTC]: 
+windows [n]: 
+use_pycharm [n]: 
+use_docker [y]: 
+postgresql_version [10.3]: 
+Select js_task_runner:
+1 - None
+2 - Gulp
+3 - Grunt
+Choose from 1, 2, 3 [1]: 
+custom_bootstrap_compilation [n]: 
+use_compressor [n]: 
+use_celery [n]: 
+use_mailhog [n]: 
+use_sentry_for_error_reporting [n]: 
+use_whitenoise [y]: 
+use_heroku [n]: 
+use_travisci [n]: 
+keep_local_envs_in_vcs [y]: 
+ [SUCCESS]: Project initialized, keep up the good work!
+
 
 Enter the project and take a look around::
 
-    $ cd reddit/
+    $ cd geopaparazzi_reference_server/
     $ ls
 
 Create a git repo and push it there::
@@ -201,7 +141,7 @@ Create a git repo and push it there::
     $ git init
     $ git add .
     $ git commit -m "first awesome commit"
-    $ git remote add origin git@github.com:pydanny/redditclone.git
+    $ git remote add origin git@github.com:mygithubaccount/geopaparazzi_reference_server.git
     $ git push -u origin master
 
 Now take a look at your repo. Don't forget to carefully look at the generated README. Awesome, right?
