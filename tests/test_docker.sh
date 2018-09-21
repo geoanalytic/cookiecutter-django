@@ -11,11 +11,14 @@ mkdir -p .cache/docker
 cd .cache/docker
 
 # create the project using the default settings in cookiecutter.json
-cookiecutter ../../ --no-input --overwrite-if-exists use_docker=y js_task_runner=None
+cookiecutter ../../ --no-input --overwrite-if-exists use_docker=y
 cd my_awesome_project
 
+# run the project's type checks
+docker-compose -f local.yml run django mypy my_awesome_project
+
 # run the project's tests
-docker-compose -f local.yml run django python manage.py test
+docker-compose -f local.yml run django pytest
 
 # return non-zero status code if there are migrations that have not been created
 docker-compose -f local.yml run django python manage.py makemigrations --dry-run --check || { echo "ERROR: there were changes in the models, but migration listed above have not been created and are not saved in version control"; exit 1; }
