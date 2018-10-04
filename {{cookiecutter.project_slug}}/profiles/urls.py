@@ -18,10 +18,11 @@ urlpatterns = [
     url(r'^otherfiles/$', views.OtherfilesList.as_view(), name='otherfile-list'),
     url(r'^otherfiles/(?P<pk>[0-9]+)/$', views.OtherfilesDetail.as_view(), name='otherfile-detail'),
     url(r'^projects/upload/(?P<filename>[^/]+)$', views.FileUploadView.as_view()),
-#    url(r'^userprojects/(?P<filename>[^/]+)$', views.UserProjectsViewSet.as_view()), 
+#    url(r'^userprojects/(?P<filename>[^/]+)$', views.UserProjectsViewSet.as_view()),
 #    url(r'^users/$', views.UserList.as_view()),
 #    url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
-    url(r'^api-auth/', include('rest_framework.urls')),    
+    url(r'^api-auth/', include('rest_framework.urls')),
+    url(r'^index/$', views.Catalog, name='index'),
 ]
 
 router = DefaultRouter()

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card-group">
+    <div class="card border-primary mb-3">
+      <div class="card-header">User Data</div>
+      <div class="card-body">
+        <p class="card-text text-primary">Users:            {{ num_users }}</p>
+        <p class="card-text text-primary">Superusers:       {{ num_superusers }}</p>
+        <p class="card-text text-primary">Profiles:         {{ num_profiles }}</p>
+        <p class="card-text text-primary">User Projects:    {{ num_userprojects }}</p>
+      </div>
+      <div class="card-footer">Last update:  {{ last_usr }}</div>
+    </div>
+    <div class="card border-primary mb-3">
+      <div class="card-header">Support Files</div>
+      <div class="card-body">
+        <p class="card-text text-primary">Projects:         {{ num_projects }}</p>
+        <p class="card-text text-primary">Basemaps:         {{ num_basemaps }}</p>
+        <p class="card-text text-primary">Tags (forms):     {{ num_tags }}</p>
+        <p class="card-text text-primary">Spatialite DBs:   {{ num_spatialitedbs }}</p>
+        <p class="card-text text-primary">Other Files:      {{ num_otherfiles }}</p>
+      </div>
+      <div class="card-footer">Last update:  {{ last_rcd }}</div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -79,6 +79,7 @@ LOCAL_APPS = [
     '{{ cookiecutter.project_slug }}.users.apps.UsersAppConfig',
     # the geopaparazzi profile server
     'profiles',
+    'gp_profiles',
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block css %}
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+  <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+  crossorigin=""/>
+{% endblock css %}
+
+{% block content %}
+    <div class="row">
+      <div id="map" class="col smallmap" style="height:400px"></div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <table id="tracks" class="table table-striped table-bordered" style="width:100%">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Text</th>
+              <th>Length</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+  <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  <script src="//cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+        integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+        crossorigin=""></script>
+  <script>
+  var osmTiles = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19,
+    });
+  var lon = -114;
+  var lat = 51;
+  var zoom = 10;
+  var map, dataUrl, layer, geojson;
+
+      $(document).ready(function() {
+          var table = $('#tracks').DataTable({
+              "ajax": {
+                "processing": true,
+                "url": "/gp_projects/tracklist/?format=datatables",
+                "dataSrc": "data"
+                },
+              "columns": [
+                  {"data": "id"},
+                  {"data": "timestamp_start"},
+                  {"data": "timestamp_end"},
+                  {"data": "text"},
+                  {"data": "lengthm"},
+              ]
+          });
+
+          $('#tracks tbody').on('click', 'tr', function () {
+            var data = table.row( this ).data();
+            /* remove the old geojson layer */
+            if (map.hasLayer(geojson)){
+              map.removeLayer(geojson)
+              }
+            /* get the geoJson for the selected track */
+            dataUrl = 'tracks/' + data.id
+            $.getJSON(dataUrl, function(data) {
+              geojson = L.geoJson(data).addTo(map);
+              map.fitBounds(geojson.getBounds());
+            });
+          } );
+
+          /* create the map  */
+          map = L.map('map').setView([lat, lon], zoom)
+          osmTiles.addTo(map);
+      });
+
+
+
+  </script>
+{% endblock javascript %}
