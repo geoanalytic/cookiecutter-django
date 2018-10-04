@@ -26,7 +26,7 @@
   "use_compressor": "n",
   "use_celery": "y",
   "use_mailhog": "n",
-  "use_sentry_for_error_reporting": "n",
+  "use_sentry": "n",
   "use_whitenoise": "y",
   "use_heroku": "n",
   "use_travisci": "n",
