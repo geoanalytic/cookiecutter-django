@@ -6,7 +6,7 @@ from django.contrib.gis.geos import Point
 import tempfile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
-from geopaparazzi_reference_server.users.tests.factories import UserFactory
+from {{ cookiecutter.project_slug }}.users.tests.factories import UserFactory
 
 # Some tests of the various models for the geopaparazzi cloud profile services
 @override_settings(MEDIA_ROOT=tempfile.gettempdir()) 

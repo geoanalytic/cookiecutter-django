@@ -7,8 +7,8 @@ from django.utils.safestring import mark_safe
 
 
 def userdata_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/trailstewards/<owner>/userdata/<filename>
-    return 'trailstewards/{0}/userdata/{1}'.format(instance.owner, os.path.basename(filename))
+    # file will be uploaded to MEDIA_ROOT/<owner>/userdata/<filename>
+    return '{0}/userdata/{1}'.format(instance.owner, os.path.basename(filename))
 
 
 class PointFeature(models.Model):

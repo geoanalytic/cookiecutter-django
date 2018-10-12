@@ -3,7 +3,9 @@ from __future__ import absolute_import, unicode_literals
 import os
 from datetime import datetime, timezone
 # from celery import shared_task
-from geopaparazzi_reference_server.taskapp.celery import app
+{% if cookiecutter.use_celery == 'y' -%}
+from {{ cookiecutter.project_slug }}.taskapp.celery import app
+{%- endif %}
 import sqlite3
 import tempfile
 from PIL import Image, ExifTags

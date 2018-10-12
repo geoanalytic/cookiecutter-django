@@ -40,8 +40,8 @@ class Project(models.Model):
 
 
 def userproject_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/trailstewards/<owner>/userprojects/<filename>
-    return 'trailstewards/{0}/userprojects/{1}'.format(instance.owner, os.path.basename(filename))
+    # file will be uploaded to MEDIA_ROOT/<owner>/userprojects/<filename>
+    return '{0}/userprojects/{1}'.format(instance.owner, os.path.basename(filename))
 
 
 class UserProject(models.Model):
@@ -60,15 +60,15 @@ class UserProject(models.Model):
 
 
 def userproject_post_save(sender, instance, signal, *args, **kwargs):
-    LoadUserProject.delay(instance.document.name, instance.owner.id)
+    LoadUserProject{% if cookiecutter.use_celery == 'y' -%}.delay{%- endif %}(instance.document.name, instance.owner.id)
 
 
 signals.post_save.connect(userproject_post_save, sender=UserProject)
 
 
 def tag_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/trailstewards/<owner>/tags/<filename>
-    return 'trailstewards/{0}/tags/{1}'.format(instance.owner, os.path.basename(filename))
+    # file will be uploaded to MEDIA_ROOT/<owner>/tags/<filename>
+    return '{0}/tags/{1}'.format(instance.owner, os.path.basename(filename))
 
 
 class Tag(models.Model):

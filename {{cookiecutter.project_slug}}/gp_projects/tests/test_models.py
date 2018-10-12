@@ -7,7 +7,7 @@ from django.contrib.gis.geos import Point, LineString
 import tempfile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
-from geopaparazzi_reference_server.users.tests.factories import UserFactory
+from {{ cookiecutter.project_slug }}.users.tests.factories import UserFactory
 
 
 # Some tests of the various models for the geopaparazzi user project services
