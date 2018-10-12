@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block extracss %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css"/>
+{% endblock extracss %}
+
+{% block content %}
+    <div class="row">
+      <div class="col-sm-12">
+        <table id="tracks" class="table table-striped table-bordered" style="width:100%">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Lat</th>
+              <th>Lon</th>
+              <th>Alt</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+{% endblock %}
+
+
+{% block extrajavascript %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
+  <script>
+      $(document).ready(function() {
+          var table = $('#tracks').DataTable({
+              "ajax": {
+                "processing": false,
+                "url": "/gp_projects/imagenotes/?format=datatables",
+                "dataSrc": "features"
+                },
+              "columns": [
+                  {"data": "id"},
+                  {"data": "properties.lat"},
+                  {"data": "properties.lon"},
+                  {"data": "properties.altitude"},
+                  {"data": "properties.timestamp"},
+              ]
+          });
+      });
+  </script>
+{% endblock extrajavascript %}

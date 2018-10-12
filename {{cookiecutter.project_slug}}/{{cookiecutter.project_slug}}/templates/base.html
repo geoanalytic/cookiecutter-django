@@ -31,7 +31,7 @@
     {% endraw %}{% endif %}{% raw %}
     {% endraw %}{% if cookiecutter.use_compressor == "y" %}{% raw %}{% endcompress %}{% endraw %}{% endif %}{% raw %}
     {% endblock %}
-
+    {% block extracss %}{% endblock extracss %}
   </head>
 
   <body>
@@ -55,6 +55,22 @@
               <li class="nav-item">
                 {# URL provided by django-allauth/account/urls.py #}
                 <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a>
+              </li>
+              <li class="nav-item">
+                {# Custom views - list of tracks #}
+                <a class="nav-link" href="{% url 'usertracks' %}">{% trans "My Tracks" %}</a>
+              </li>
+              <li class="nav-item">
+                {# Custom views - list of notes #}
+                <a class="nav-link" href="{% url 'usernotes' %}">{% trans "My Notes" %}</a>
+              </li>
+              <li class="nav-item">
+                {# Custom views - list of images #}
+                <a class="nav-link" href="{% url 'userimages' %}">{% trans "My Images" %}</a>
+              </li>
+              <li class="nav-item">
+                {# Custom views - form builder #}
+                <a class="nav-link" target=”_blank” href="{% url 'formbuilder' %}">{% trans "Form Builder" %}</a>
               </li>
               <li class="nav-item">
                 {# URL provided by django-allauth/account/urls.py #}
@@ -116,6 +132,7 @@
       {% endraw %}{% if cookiecutter.use_compressor == "y" %}{% raw %}{% endcompress %}{% endraw %}{% endif %}{% raw %}
 
     {% endblock javascript %}
+    {% block extrajavascript %}{% endblock extrajavascript %}
   </body>
 </html>
  {% endraw %}

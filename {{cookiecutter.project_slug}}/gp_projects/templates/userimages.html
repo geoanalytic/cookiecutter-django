@@ -1,19 +1,11 @@
-{% extends "base.html" %}
-
-{% block css %}
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
-  <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
-  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-  crossorigin=""/>
-{% endblock css %}
+{% extends "userbase.html" %}
 
 {% block content %}
     <div class="row">
-      <div id="map" class="col smallmap" style="height:400px"></div>
-      <div id="image" class="col" style="height:400px"></div>
+      <div id="map" class="col-md-6 col-sm-8 col-xs-12 smallmap" style="height:400px"></div>
+      <div id="image" class="col-md-6 col-sm-8 col-xs-12" style="height:400px"></div>
     </div>
-    <div class="row">
+    <div class="row" style="margin-top:8px">
       <div class="col-sm-12">
         <table id="tracks" class="table table-striped table-bordered" style="width:100%">
           <thead>
@@ -23,6 +15,7 @@
               <th>Lon</th>
               <th>Alt</th>
               <th>Timestamp</th>
+              <th>Thumbnail</th>
             </tr>
           </thead>
         </table>
@@ -31,31 +24,15 @@
 {% endblock %}
 
 
-{% block javascript %}
-  <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-  <script src="//cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
-  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
-        integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
-        crossorigin=""></script>
-  <script>
-  var osmTiles = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    maxZoom: 19,
-    });
-  var lon = -114;
-  var lat = 51;
-  var zoom = 10;
-  var map, layer;
-  var circle = L.circleMarker([lat, lon], {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5,
-    radius: 10
-  });
-
+{% block extrajavascript %}
+<script>
       $(document).ready(function() {
           var table = $('#tracks').DataTable({
+              "select": true,
+              "searching": false,
+              "scrollY":        "400px",
+              "scrollCollapse": true,
+              "paging":         false,
               "ajax": {
                 "processing": true,
                 "url": "/gp_projects/imagenotes/?format=datatables",
@@ -67,18 +44,26 @@
                   {"data": "lon"},
                   {"data": "altitude"},
                   {"data": "timestamp"},
+                  {"data": "thumbnail",
+                      "render": function(data, type, row) {
+                      return '<img class="img-fluid" style="height:40px"  src="'+data+'" />';
+                  }},
                   {"data": "image", "visible": false},
               ]
           });
 
-          $('#tracks tbody').on('click', 'tr', function () {
-            var data = table.row( this ).data();
-            /* load the image into the image div */
-            $('#image').html('<img class="img-fluid" src=' +  data.image + ' >');
-            /* place the marker at the location */
-            circle.setLatLng([data.lat, data.lon]);
-            map.setView([data.lat, data.lon]);
-          } );
+      table.on( 'select', function ( e, dt, type, indexes ) {
+          if ( type === 'row' ) {
+              var img = table.rows( indexes ).data().pluck( 'image' );
+              $('#image').html('<img class="img-fluid"  style="width=100%; max-height:400px" src=' +  img[0] + ' >');
+              var lati = table.rows( indexes ).data().pluck( 'lat' );
+              var long = table.rows( indexes ).data().pluck( 'lon' );
+              circle.setLatLng([lati[0], long[0]]);
+              map.setView([lati[0], long[0]]);
+          }
+      } );
+
+
 
           /* create the map  */
           map = L.map('map').setView([lat, lon], zoom)
@@ -88,5 +73,5 @@
 
 
 
-  </script>
-{% endblock javascript %}
+ </script>
+{% endblock extrajavascript %}

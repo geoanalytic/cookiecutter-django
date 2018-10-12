@@ -1,9 +1,11 @@
 from django.conf.urls import url, include
+from django.views.generic import TemplateView
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.routers import DefaultRouter
 from profiles import views
 
 urlpatterns = [
+    # RESTful urls
     url(r'^myprofiles/$', views.MyProfiles.as_view(), name='myprofiles'),
     url(r'^profiles/$', views.ProfileList.as_view(), name='profile-list'),
     url(r'^profiles/(?P<pk>[0-9]+)/$', views.ProfileDetail.as_view(), name='profile-detail'),
@@ -18,11 +20,11 @@ urlpatterns = [
     url(r'^otherfiles/$', views.OtherfilesList.as_view(), name='otherfile-list'),
     url(r'^otherfiles/(?P<pk>[0-9]+)/$', views.OtherfilesDetail.as_view(), name='otherfile-detail'),
     url(r'^projects/upload/(?P<filename>[^/]+)$', views.FileUploadView.as_view()),
-#    url(r'^userprojects/(?P<filename>[^/]+)$', views.UserProjectsViewSet.as_view()),
-#    url(r'^users/$', views.UserList.as_view()),
-#    url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
+    # allow authentication via REST
     url(r'^api-auth/', include('rest_framework.urls')),
+    # HTML urls
     url(r'^index/$', views.Catalog, name='index'),
+    url(r'^formbuilder/$', TemplateView.as_view(template_name="geopaparazzi-FormBuilder-master/index.html"), name="formbuilder"),
 ]
 
 router = DefaultRouter()

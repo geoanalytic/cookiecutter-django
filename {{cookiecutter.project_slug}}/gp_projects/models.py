@@ -7,8 +7,8 @@ from django.utils.safestring import mark_safe
 
 
 def userdata_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/<owner>/userdata/<filename>
-    return '{0}/userdata/{1}'.format(instance.owner, os.path.basename(filename))
+    # file will be uploaded to MEDIA_ROOT/trailstewards/<owner>/userdata/<filename>
+    return 'trailstewards/{0}/userdata/{1}'.format(instance.owner, os.path.basename(filename))
 
 
 class PointFeature(models.Model):
@@ -43,7 +43,7 @@ class ImageNote(PointFeature):
     image = models.ImageField(upload_to=userdata_directory_path)
     thumbnail = models.ImageField(upload_to=userdata_directory_path)
     azimuth = models.FloatField(null=True, blank=True)
-    note = models.ForeignKey(Note, on_delete=models.CASCADE)
+    note = models.ForeignKey(Note, related_name='images', on_delete=models.CASCADE)
 
     def thumbnail_tag(self):
         return mark_safe('<img src="%s" width="256" />' % self.thumbnail.url)

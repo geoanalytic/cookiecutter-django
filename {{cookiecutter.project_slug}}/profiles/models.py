@@ -65,6 +65,12 @@ def userproject_post_save(sender, instance, signal, *args, **kwargs):
 
 signals.post_save.connect(userproject_post_save, sender=UserProject)
 
+
+def tag_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/trailstewards/<owner>/tags/<filename>
+    return 'trailstewards/{0}/tags/{1}'.format(instance.owner, os.path.basename(filename))
+
+
 class Tag(models.Model):
     """ In geopaparrazi, Tags are actually form definitions, which are stored as JSON.
     This table keeps track of these JSON files.
@@ -73,9 +79,10 @@ class Tag(models.Model):
     """
     path = models.CharField(max_length=100, blank=True, default='')
     modifieddate = models.DateTimeField(auto_now_add=True)
-    url = models.FileField(upload_to='tags/')
+    url = models.FileField(upload_to=tag_directory_path)
     size = models.CharField(max_length=30, blank=True, null=True)
     # add description and owner
+    owner = models.ForeignKey('users.user', to_field='id', on_delete=models.CASCADE, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         self.size = self.url.size

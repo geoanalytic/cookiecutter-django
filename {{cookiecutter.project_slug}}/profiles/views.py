@@ -60,6 +60,9 @@ class TagList(generics.ListCreateAPIView):
     serializer_class = TagSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 class TagDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer

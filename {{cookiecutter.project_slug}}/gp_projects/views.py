@@ -1,7 +1,9 @@
 from rest_framework import generics, permissions
 from .models import TrackFeature, ImageNote, Note
-from .serializers import TrackFeatureSerializer, ImageNoteSerializer, NGImageNoteSerializer, NGTrackFeatureSerializer
+from .serializers import TrackFeatureSerializer, ImageNoteSerializer, NGImageNoteSerializer, NGTrackFeatureSerializer, NGNoteSerializer
 from django.http import HttpResponse
+from django.db.models.functions import TruncDate
+from django.shortcuts import render
 from django.core.serializers import serialize
 
 
@@ -68,3 +70,29 @@ class NGImageNoteDetail(generics.RetrieveAPIView):
         return ImageNote.objects.filter(owner=user)
 
 
+class NGNoteList(generics.ListAPIView):
+    serializer_class = NGNoteSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        user = self.request.user
+        return Note.objects.filter(owner=user)
+
+
+class NGNoteDetail(generics.RetrieveAPIView):
+    serializer_class = NGNoteSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        user = self.request.user
+        return Note.objects.filter(owner=user)
+
+
+def UserView(request):
+    """a view of all the userdata owned by the requesting owner"""
+    date_list = Note.objects.annotate(date=TruncDate('timestamp')).distinct('date').values('date')
+    note_list = Note.objects.filter(owner=request.user)
+    image_list = ImageNote.objects.filter(owner=request.user)
+    track_list = TrackFeature.objects.filter(owner=request.user)
+    context = {'date_list': date_list, 'note_list': note_list, 'image_list': image_list, 'track_list': track_list}
+    return render(request, 'userproj.html', context)

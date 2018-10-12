@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from geopaparazzi_reference_server.taskapp.celery import app
 import sqlite3
 import tempfile
-from PIL import Image
+from PIL import Image, ExifTags
 from django.contrib.auth import get_user_model
 from gp_projects.models import ImageNote, Note, TrackFeature
 from django.contrib.gis.geos import Point, LineString
@@ -18,6 +18,17 @@ from django.core.files.storage import default_storage
 def LoadUserProject(userproject_file, ownerid):
     """ given an uploaded Geopaparazzi UserProject
     extract the useful bits and load them to the database
+    :param userproject_file: name of the sqlite3 file to be read
+    :param ownerid: id of the file owner
+    :type arg1: string
+    :type arg2: int
+    :rtype: None
+
+    Since the userproject file and the images extracted from it may be managed by the Django-storages module (Boto)
+    we have to take care to make local copies of all files accessed.
+
+    Also, since this task is intended for asynchronous execution via Celery, the calling parameters cannot be
+    model instances (they are not JSON serializable!), so any model references have to be passed using primary keys
     """
     # before we can open the database file, it must be copied locally!
     document = default_storage.open(userproject_file, 'rb')
@@ -53,7 +64,7 @@ def LoadUserProject(userproject_file, ownerid):
         d.close()
 
     # import notes and images together in order to preserve relationships
-    for nt in c.execute('SELECT * from notes;'):
+    for nt in c.execute('SELECT * FROM notes;'):
         nt_dict = dict(nt)
         rcd = Note(owner=owner, text= nt_dict['text'], form = nt_dict['form'])
         rcd.timestamp = datetime.utcfromtimestamp(nt_dict['ts']/1000).replace(tzinfo=timezone.utc)
@@ -64,9 +75,13 @@ def LoadUserProject(userproject_file, ownerid):
         rcd.altitude = nt_dict['altim']
         rcd.save()  # save the Note here so that we can refer to it when creating ImageNote records
         d = conn.cursor()
+        # Import all Images linked to the current Note
+        # Design Note:  presumes ImageNote records are _always_ referenced by a Note
+        #               unreferenced records will not be imported
         for im in d.execute('SELECT * FROM images WHERE note_id=?;', (nt_dict['_id'],)):
             im_dict = dict(im)
             imgrcd = ImageNote(owner=owner, note=rcd, azimuth=im_dict['azim'])
+            # Note that ImageNote records have time and location distinct from the Note
             imgrcd.timestamp = datetime.utcfromtimestamp(im_dict['ts']/1000).replace(tzinfo=timezone.utc)
             imgrcd.lat = im_dict['lat']
             imgrcd.lon = im_dict['lon']
@@ -76,27 +91,61 @@ def LoadUserProject(userproject_file, ownerid):
             e.execute('SELECT * FROM imagedata WHERE _id=?;', (im_dict['_id'],))
             img = e.fetchone()
             img_dict = dict(img)
-            # the full image
+            # save the full image locally - this should probably be put in a temp directory
             blob = img_dict['data']
-            with open(im_dict['text'], 'wb') as output_file:
+            local_filename = im_dict['text']
+            with open(local_filename, 'wb') as output_file:
                 output_file.write(blob)
-            qf = open(im_dict['text'], 'rb')
+
+            # Rotate the image if an orientation tag is available
+            try:
+                image = Image.open(local_filename)
+                for orientation in ExifTags.TAGS.keys():
+                    if ExifTags.TAGS[orientation] == 'Orientation':
+                        break
+                exif = dict(image._getexif().items())
+
+                if exif[orientation] == 3:
+                    image = image.rotate(180, expand=True)
+                elif exif[orientation] == 6:
+                    image = image.rotate(270, expand=True)
+                elif exif[orientation] == 8:
+                    image = image.rotate(90, expand=True)
+                image.save(local_filename)
+                image.close()
+
+            except (AttributeError, KeyError, IndexError):
+                # cases: image don't have getexif
+                pass
+
+            qf = open(local_filename, 'rb')
             imgrcd.image = File(qf)
-            # the thumbnail
+            # the thumbnail - also should be placed in a temp directory
             blob = img_dict['thumbnail']
-            thmname = 'thm_{0}'.format(im_dict['text'])
+            thmname = 'thm_{0}'.format(local_filename)
             with open(thmname, 'wb') as output_file:
                 output_file.write(blob)
             qt = open(thmname, 'rb')
             imgrcd.thumbnail = File(qt)
+            # save the newly created image record
             imgrcd.save()
             # clean up temporary image files
             qf.close()
-            os.remove(im_dict['text'])
-            qt.close()
-            os.remove(thmname)
+            try:
+                os.remove(local_filename)
+            except OSError as err:
+                pass
 
-    # clean up the temporary file
+            qt.close()
+            try:
+                os.remove(thmname)
+            except OSError as err:
+                pass
+
+    # clean up the temporary sqlite3 file
     userproject.close()
-    os.remove(userproject.name)
+    try:
+        os.remove(userproject.name)
+    except OSError as err:
+        pass
 

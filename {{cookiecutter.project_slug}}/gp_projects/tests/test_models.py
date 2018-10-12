@@ -1,11 +1,13 @@
 from django.test import TestCase
+from django.urls import reverse
 import datetime
 from ..models import Note, ImageNote, TrackFeature
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.gis.geos import Point, LineString
 import tempfile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
-from {{ cookiecutter.project_slug }}.users.tests.factories import UserFactory
+from geopaparazzi_reference_server.users.tests.factories import UserFactory
 
 
 # Some tests of the various models for the geopaparazzi user project services
