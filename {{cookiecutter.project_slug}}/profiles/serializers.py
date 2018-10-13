@@ -70,6 +70,12 @@ class ProfileSerializer(serializers.ModelSerializer):
     basemaps = BasemapSerializer(many=True, read_only=True)
     spatialitedbs = SpatialitedbsSerializer(many=True, read_only=True)
     otherfiles = OtherfilesSerializer(many=True, read_only=True)
+
+    # this bit is for omitting empty fields (size)
+    def to_representation(self, instance):
+        result = super(ProfileSerializer, self).to_representation(instance)
+        return OrderedDict([(key, result[key]) for key in result if result[key] is not None])
+
     class Meta:
         model = Profile
         fields = ('name', 'description', 'creationdate', 'modifieddate', 'color', 'active',
