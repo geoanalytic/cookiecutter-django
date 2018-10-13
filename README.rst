@@ -1,5 +1,5 @@
 Cookiecutter Geopaparazzi Reference Server
-=======================
+==========================================
 
 Powered by Cookiecutter-Django_, Cookiecutter Geopaparazzi Reference Server is a framework for jumpstarting
 production-ready Geopaparazzi cloud projects quickly.
@@ -95,40 +95,43 @@ You'll be prompted for some values. Provide them, then a Django project will be 
 Answer the prompts with your own desired options_. For example::
 
 $ cookiecutter https://github.com/geoanalytic/cookiecutter-geopaparazzi-server.git
-project_name [Geopaparazzi Reference Server]: 
-project_slug [geopaparazzi_reference_server]: 
-description [A RESTful server for Geopaparazzi cloud profiles, based on GeoDjango and PostGIS]: 
-author_name [David Currie]: 
-email [david-currie@example.com]:              
-domain_name [example.com]: 
-version [0.1.0]: 
-Select open_source_license:
-1 - MIT
-2 - BSD
-3 - GPLv3
-4 - Apache Software License 2.0
-5 - Not open source
-Choose from 1, 2, 3, 4, 5 [1]: 
-timezone [UTC]: 
-windows [n]: 
-use_pycharm [n]: 
-use_docker [y]: 
-postgresql_version [10.3]: 
-Select js_task_runner:
-1 - None
-2 - Gulp
-3 - Grunt
-Choose from 1, 2, 3 [1]: 
-custom_bootstrap_compilation [n]: 
-use_compressor [n]: 
-use_celery [n]: 
-use_mailhog [n]: 
-use_sentry_for_error_reporting [n]: 
-use_whitenoise [y]: 
-use_heroku [n]: 
-use_travisci [n]: 
-keep_local_envs_in_vcs [y]: 
- [SUCCESS]: Project initialized, keep up the good work!
+
+.. code-block:: bash
+
+    project_name [Geopaparazzi Reference Server]:
+    project_slug [geopaparazzi_reference_server]:
+    description [A RESTful server for Geopaparazzi cloud profiles, based on GeoDjango and PostGIS]:
+    author_name [David Currie]:
+    email [david-currie@example.com]:
+    domain_name [example.com]:
+    version [0.1.0]:
+    Select open_source_license:
+    1 - MIT
+    2 - BSD
+    3 - GPLv3
+    4 - Apache Software License 2.0
+    5 - Not open source
+    Choose from 1, 2, 3, 4, 5 [1]:
+    timezone [UTC]:
+    windows [n]:
+    use_pycharm [n]:
+    use_docker [y]:
+    postgresql_version [10.3]:
+    Select js_task_runner:
+    1 - None
+    2 - Gulp
+    3 - Grunt
+    Choose from 1, 2, 3 [1]:
+    custom_bootstrap_compilation [n]:
+    use_compressor [n]:
+    use_celery [n]:
+    use_mailhog [n]:
+    use_sentry_for_error_reporting [n]:
+    use_whitenoise [y]:
+    use_heroku [n]:
+    use_travisci [n]:
+    keep_local_envs_in_vcs [y]:
+     [SUCCESS]: Project initialized, keep up the good work!
 
 
 Enter the project and take a look around::

@@ -74,12 +74,14 @@ THIRD_PARTY_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'rest_framework',
+    'rest_framework_gis',
+    'rest_framework_datatables',
 ]
 LOCAL_APPS = [
     '{{ cookiecutter.project_slug }}.users.apps.UsersAppConfig',
     # the geopaparazzi profile server
     'profiles',
-    'gp_profiles',
+    'gp_projects',
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -221,7 +223,7 @@ EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.s
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL regex.
-ADMIN_URL = r'^admin/'
+ADMIN_URL = 'admin/'
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = [
     ("""{{cookiecutter.author_name}}""", '{{cookiecutter.email}}'),
@@ -278,3 +280,15 @@ STATICFILES_FINDERS += ['compressor.finders.CompressorFinder']
 {%- endif %}
 # Your stuff...
 # ------------------------------------------------------------------------------
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework_datatables.renderers.DatatablesRenderer',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework_datatables.filters.DatatablesFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
+    'PAGE_SIZE': 50,
+}

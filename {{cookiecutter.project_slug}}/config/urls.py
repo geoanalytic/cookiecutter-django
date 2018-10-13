@@ -22,11 +22,9 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
     path('profiles/', include('profiles.urls')),
-
+    path('gp_projects/', include('gp_projects.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-] + static(
-    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-)
+
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
