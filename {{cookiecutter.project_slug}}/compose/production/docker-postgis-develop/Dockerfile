@@ -23,19 +23,37 @@ EXPOSE 5432
 # Run any additional tasks here that are too tedious to put in
 # this dockerfile directly.
 COPY ./compose/production/docker-postgis-develop/env-data.sh /
+RUN sed -i 's/\r//' /env-data.sh
 COPY ./compose/production/docker-postgis-develop/setup.sh /
+RUN sed -i 's/\r//' /setup.sh
 RUN chmod +x /setup.sh
 RUN /setup.sh
 
 # We will run any commands in this when the container starts
 COPY ./compose/production/docker-postgis-develop/docker-entrypoint.sh /
+RUN sed -i 's/\r//' /docker-entrypoint.sh
+
 COPY ./compose/production/docker-postgis-develop/setup-conf.sh /
+RUN sed -i 's/\r//' /setup-conf.sh
+
 COPY ./compose/production/docker-postgis-develop/setup-database.sh /
+RUN sed -i 's/\r//' /setup-database.sh
+
 COPY ./compose/production/docker-postgis-develop/setup-pg_hba.sh /
+RUN sed -i 's/\r//' /setup-pg_hba.sh
+
 COPY ./compose/production/docker-postgis-develop/setup-replication.sh /
+RUN sed -i 's/\r//' /setup-replication.sh
+
 COPY ./compose/production/docker-postgis-develop/setup-ssl.sh /
+RUN sed -i 's/\r//' /setup-ssl.sh
+
 COPY ./compose/production/docker-postgis-develop/setup-user.sh /
+RUN sed -i 's/\r//' /setup-user.sh
+
 COPY ./compose/production/docker-postgis-develop/postgresql.conf /tmp/
+RUN sed -i 's/\r//' /tmp/postgresql.conf
+
 RUN chmod +x /docker-entrypoint.sh
 
 # Optimise postgresql
