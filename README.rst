@@ -77,7 +77,7 @@ Constraints
 Usage
 ------
 
-Let's pretend you want to create a Django project called "redditclone". Rather than using ``startproject``
+Let's pretend you want to create a Django project called "mapticon". Rather than using ``startproject``
 and then editing the results to include your name, email, and various configuration issues that always get forgotten until the worst possible moment, get cookiecutter_ to do all the work.
 
 First, get Cookiecutter. Trust me, it's awesome::
@@ -98,8 +98,8 @@ $ cookiecutter https://github.com/geoanalytic/cookiecutter-geopaparazzi-server.g
 
 .. code-block:: bash
 
-    project_name [Geopaparazzi Reference Server]:
-    project_slug [geopaparazzi_reference_server]:
+    project_name [mapticon]:
+    project_slug [mapticon]:
     description [A RESTful server for Geopaparazzi cloud profiles, based on GeoDjango and PostGIS]:
     author_name [David Currie]:
     email [david-currie@example.com]:
@@ -124,7 +124,7 @@ $ cookiecutter https://github.com/geoanalytic/cookiecutter-geopaparazzi-server.g
     Choose from 1, 2, 3 [1]:
     custom_bootstrap_compilation [n]:
     use_compressor [n]:
-    use_celery [n]:
+    use_celery [y]:
     use_mailhog [n]:
     use_sentry_for_error_reporting [n]:
     use_whitenoise [y]:
@@ -136,7 +136,7 @@ $ cookiecutter https://github.com/geoanalytic/cookiecutter-geopaparazzi-server.g
 
 Enter the project and take a look around::
 
-    $ cd geopaparazzi_reference_server/
+    $ cd mapticon/
     $ ls
 
 Create a git repo and push it there::
@@ -144,7 +144,7 @@ Create a git repo and push it there::
     $ git init
     $ git add .
     $ git commit -m "first awesome commit"
-    $ git remote add origin git@github.com:mygithubaccount/geopaparazzi_reference_server.git
+    $ git remote add origin git@github.com:mygithubaccount/mapticon.git
     $ git push -u origin master
 
 Now take a look at your repo. Don't forget to carefully look at the generated README. Awesome, right?
