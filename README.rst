@@ -1,17 +1,8 @@
 Cookiecutter Geopaparazzi Reference Server
 ==========================================
 
-Powered by Cookiecutter-Django_, Cookiecutter Geopaparazzi Reference Server is a framework for jumpstarting
+Based on Cookiecutter-Django_, Cookiecutter Geopaparazzi Reference Server is a framework for jumpstarting
 production-ready Geopaparazzi cloud projects quickly.
-
-* Documentation: https://cookiecutter-django.readthedocs.io/en/latest/
-* See Troubleshooting_ for common errors and obstacles
-* If you have problems with Cookiecutter Geopaparazzi Server, please open issues_ don't send
-  emails to the maintainers.
-
-.. _cookiecutter-django: https://github.com/pydanny/cookiecutter-django
-
-.. _Troubleshooting: https://cookiecutter-django.readthedocs.io/en/latest/troubleshooting.html
 
 .. _issues: https://github.com/geoanalytic/cookiecutter-geopaparazzi-server/issues/new
 
@@ -21,7 +12,6 @@ Features
 
 * For Django 2.0
 * Works with Python 3.6
-* Renders Django projects with 100% starting test coverage
 * Twitter Bootstrap_ v4.0.0 (`maintained Foundation fork`_ also available)
 * 12-Factor_ based settings via django-environ_
 * Secure by default. We believe in SSL.
@@ -30,7 +20,7 @@ Features
 * Comes with custom user model ready to go
 * Grunt build for compass and livereload
 * Send emails via Anymail_ (using Mailgun_ by default, but switchable)
-* Media storage using Amazon S3
+* Media storage using Amazon S3 or DigitalOcean Spaces
 * Docker support using docker-compose_ for development and production (using Caddy_ with LetsEncrypt_ support)
 * Procfile_ for deploying to Heroku
 * Instructions for deploying to PythonAnywhere_
@@ -67,186 +57,184 @@ Optional Integrations
 .. _Caddy: https://caddyserver.com/
 .. _LetsEncrypt: https://letsencrypt.org/
 
-Constraints
------------
 
-* Only maintained 3rd party libraries are used.
-* Uses PostgreSQL everywhere (9.2+)
-* Environment variables for configuration (This won't work with Apache/mod_wsgi except on AWS ELB).
+Prerequisites
+-------------
+
+* Docker-compose_
+* Python_ (including Pip_ note that if you are using Windows its easiest to just install Anaconda_)
+* Git_
+
+.. _Docker-compose: https://github.com/docker/compose
+.. _Python: https://www.python.org/
+.. _Pip: https://pip.pypa.io/en/stable/installing/
+.. _Anaconda: https://www.anaconda.com/
+.. _Git: https://git-scm.com/
 
 Usage
 ------
 
-Let's pretend you want to create a Django project called "mapticon". Rather than using ``startproject``
-and then editing the results to include your name, email, and various configuration issues that always get forgotten until the worst possible moment, get cookiecutter_ to do all the work.
+Here are the basic instructions for setting up a local development system, discussed in more detail in this `blog
+post <https://geoanalytic.github.io/a-reference-server-for-geopaparazzi-cloud-profiles/>`__.
+Before you begin, open a console window and create a directory to hold
+the project source code and demo data you will download
 
-First, get Cookiecutter. Trust me, it's awesome::
+::
+
+    $ mkdir /grs
+    $ cd /grs
+
+1. Install cookiecutter
+
+::
 
     $ pip install "cookiecutter>=1.4.0"
 
-Now run it against this repo::
+2. Run it against the latest repo for the reference server
+
+::
 
     $ cookiecutter https://github.com/geoanalytic/cookiecutter-geopaparazzi-server
 
-You'll be prompted for some values. Provide them, then a Django project will be created for you.
+You will be asked a number of questions, some of which are only
+applicable to production systems. For development purposes, you should
+enter ‘y’ to the following choices (these should be the defaults):
 
-**Warning**: After this point, change 'David Currie', 'dave', etc to your own information.
+-  docker
+-  celery
+-  whitenoise
 
-Answer the prompts with your own desired options_. For example::
+3) CD into the directory created by the cookiecutter process and then
+   build and run the containers:
 
-$ cookiecutter https://github.com/geoanalytic/cookiecutter-geopaparazzi-server.git
+::
 
-.. code-block:: bash
+    $ cd geopaparazzi_reference_server
+    $ docker-compose -f local.yml build
+    $ docker-compose -f local.yml up -d
+    $ docker-compose -f local.yml ps
 
-    project_name [mapticon]:
-    project_slug [mapticon]:
-    description [A RESTful server for Geopaparazzi cloud profiles, based on GeoDjango and PostGIS]:
-    author_name [David Currie]:
-    email [david-currie@example.com]:
-    domain_name [example.com]:
-    version [0.1.0]:
-    Select open_source_license:
-    1 - MIT
-    2 - BSD
-    3 - GPLv3
-    4 - Apache Software License 2.0
-    5 - Not open source
-    Choose from 1, 2, 3, 4, 5 [1]:
-    timezone [UTC]:
-    windows [n]:
-    use_pycharm [n]:
-    use_docker [y]:
-    postgresql_version [10.3]:
-    Select js_task_runner:
-    1 - None
-    2 - Gulp
-    3 - Grunt
-    Choose from 1, 2, 3 [1]:
-    custom_bootstrap_compilation [n]:
-    use_compressor [n]:
-    use_celery [y]:
-    use_mailhog [n]:
-    use_sentry_for_error_reporting [n]:
-    use_whitenoise [y]:
-    use_heroku [n]:
-    use_travisci [n]:
-    keep_local_envs_in_vcs [y]:
-     [SUCCESS]: Project initialized, keep up the good work!
+If everything is working, the last command should result in a report
+like this:
+
+::
+
+                        Name                                  Command               State           Ports
+    --------------------------------------------------------------------------------------------------------------
+    geopaparazzi_reference_server_celerybeat_1     /entrypoint /start-celerybeat    Up
+    geopaparazzi_reference_server_celeryworker_1   /entrypoint /start-celeryw ...   Up
+    geopaparazzi_reference_server_django_1         /entrypoint /start               Up      0.0.0.0:8000->8000/tcp
+    geopaparazzi_reference_server_flower_1         /entrypoint /start-flower        Up      0.0.0.0:5555->5555/tcp
+    geopaparazzi_reference_server_postgres_1       /bin/sh -c /docker-entrypo ...   Up      5432/tcp
+    geopaparazzi_reference_server_redis_1          docker-entrypoint.sh redis ...   Up      6379/tcp
+
+What you see is six containers running within an isolated network that
+allows the containers to communicate among themselves. Only the django
+and flower containers are open to outside connections. Each container
+does one thing:
+
+-  django … provides the python based web framework
+-  postgres … provides a PostgreSQL/PostGIS database
+-  redis … provides a message broker and in memory cache for performance
+   and to support celery tasks
+-  celeryworker … provides an on demand asysnchronous processing
+   capability
+-  celerybeat … provides scheduled background processing capability
+-  flower … provides a real-time monitoring tool for the celery tasks
+
+4) Get the database and static assets set up, create a superuser
+
+::
+
+    $ docker-compose -f local.yml run --rm django python manage.py collectstatic
+    $ docker-compose -f local.yml run --rm django python manage.py createsuperuser
+
+The second command will prompt you to enter a username, email and
+password for the superuser. You will need those credentials to access
+the system so write them down!
+
+5)  Run the tests
+
+::
+
+    $ docker-compose -f local.yml run --rm django py.test
+
+    Starting geotabloid_postgres_1 ... done
+    PostgreSQL is available
+    Test session starts (platform: linux, Python 3.6.5, pytest 3.8.0, pytest-sugar 0.9.1)
+    Django settings: config.settings.test (from ini file)
+    rootdir: /app, inifile: pytest.ini
+    plugins: sugar-0.9.1, django-3.4.3, celery-4.2.1
+
+        geotabloid/users/tests/test_forms.py ✓                  2% ▎
+        geotabloid/users/tests/test_models.py ✓                 4% ▍
+        geotabloid/users/tests/test_urls.py ✓✓✓✓               11% █▏
+        geotabloid/users/tests/test_views.py ✓✓✓               16% █▋
+        gp_projects/tests/test_models.py ✓✓✓                   21% ██▏
+        profiles/tests/test_api.py ✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓     61% ██████▎
+        profiles/tests/test_models.py ✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓  100% ██████████
+
+    Results (6.31s):
+          57 passed
 
 
-Enter the project and take a look around::
+6) Now load the demo data
 
-    $ cd mapticon/
-    $ ls
+Download the demo data from
+`here <https://drive.google.com/open?id=12HwGhqdFNvZwS5Y6iO1dC81HWZQbsPnu>`__.
+Note that you need to install `Httpie <https://httpie.org/>`__ and edit
+the load_local.sh file, replacing ``user:password`` with the values you
+provided for the superuser and your server IP address for the
+``uploadurl`` entries.
 
-Create a git repo and push it there::
+::
 
-    $ git init
-    $ git add .
-    $ git commit -m "first awesome commit"
-    $ git remote add origin git@github.com:mygithubaccount/mapticon.git
-    $ git push -u origin master
+    $ cd location/of/demo/data
+    $ ./load_local.sh
 
-Now take a look at your repo. Don't forget to carefully look at the generated README. Awesome, right?
+Next, point your browser at http://localhost:8000/admin, login with your
+superuser credentials and edit the Profiles and create Profilesets for
+your superuser as described in the `original
+post <https://geoanalytic.github.io/a-reference-server-for-geopaparazzi-cloud-profiles/>`__.
 
-For local development, see the following:
+6) Connect Geopaparazzi to your server
+
+You will need to figure out the IP address of the computer the server is
+running on. On Linux, use the command ``hostname -I``. On Windows, the
+command ``ipconfig`` should work. On your mobile, start the app and
+select the settings (gear) icon, then select Cloud Server Settings and
+fill in the user, password and Cloud Profiles URL as shown:
+
+7) Download the cloud profiles, collect some tracks and notes, then upload your user project data.
+
+
+Cookiecutter-Django Stuff
+-------------------------
+
+As noted, this project is derived from the Cookiecutter-Django_
+You can find lots of helpful documentation there, here are some of the essential links:
 
 * `Developing locally`_
 * `Developing locally using docker`_
+
 
 .. _options: http://cookiecutter-django.readthedocs.io/en/latest/project-generation-options.html
 .. _`Developing locally`: http://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html
 .. _`Developing locally using docker`: http://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html
 
-Community
------------
 
-* Have questions? **Before you ask questions anywhere else**, please post your question on `Stack Overflow`_ under the *cookiecutter-django* tag. We check there periodically for questions.
-* If you think you found a bug or want to request a feature, please open an issue_.
-* For anything else, you can chat with us on `Gitter`_.
+* Documentation: https://cookiecutter-django.readthedocs.io/en/latest/
+* See Troubleshooting_ for common errors and obstacles
+* If you have problems with Cookiecutter Geopaparazzi Server, please open issues_ don't send
+  emails to the maintainers.
 
-.. _`Stack Overflow`: http://stackoverflow.com/questions/tagged/cookiecutter-django
-.. _`issue`: https://github.com/pydanny/cookiecutter-django/issues
-.. _`Gitter`: https://gitter.im/pydanny/cookiecutter-django?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+.. _cookiecutter-django: https://github.com/pydanny/cookiecutter-django
 
-For Readers of Two Scoops of Django
---------------------------------------------
+.. _Troubleshooting: https://cookiecutter-django.readthedocs.io/en/latest/troubleshooting.html
 
-You may notice that some elements of this project do not exactly match what we describe in chapter 3. The reason for that is this project, amongst other things, serves as a test bed for trying out new ideas and concepts. Sometimes they work, sometimes they don't, but the end result is that it won't necessarily match precisely what is described in the book I co-authored.
-
-For pyup.io Users
------------------
-
-If you are using `pyup.io`_ to keep your dependencies updated and secure, use the code *cookiecutter* during checkout to get 15% off every month.
-
-.. _`pyup.io`: https://pyup.io
 
 "Your Stuff"
 -------------
 
 Scattered throughout the Python and HTML of this project are places marked with "your stuff". This is where third-party libraries are to be integrated with your project.
 
-Releases
---------
-
-Need a stable release? You can find them at https://github.com/pydanny/cookiecutter-django/releases
-
-
-Not Exactly What You Want?
----------------------------
-
-This is what I want. *It might not be what you want.* Don't worry, you have options:
-
-Fork This
-~~~~~~~~~~
-
-If you have differences in your preferred setup, I encourage you to fork this to create your own version.
-Once you have your fork working, let me know and I'll add it to a '*Similar Cookiecutter Templates*' list here.
-It's up to you whether or not to rename your fork.
-
-If you do rename your fork, I encourage you to submit it to the following places:
-
-* cookiecutter_ so it gets listed in the README as a template.
-* The cookiecutter grid_ on Django Packages.
-
-.. _cookiecutter: https://github.com/audreyr/cookiecutter
-.. _grid: https://www.djangopackages.com/grids/g/cookiecutters/
-
-Submit a Pull Request
-~~~~~~~~~~~~~~~~~~~~~~
-
-We accept pull requests if they're small, atomic, and make our own project development
-experience better.
-
-Articles
----------
-
-* `Deploying Cookiecutter-Django with Docker-Compose`_ - Oct. 19, 2017
-* `Using Cookiecutter to Jumpstart a Django Project on Windows with PyCharm`_ - May 19, 2017
-* `Exploring with Cookiecutter`_ - Dec. 3, 2016
-* `Introduction to Cookiecutter-Django`_ - Feb. 19, 2016
-* `Django and GitLab - Running Continuous Integration and tests with your FREE account`_ - May. 11, 2016
-* `Development and Deployment of Cookiecutter-Django on Fedora`_ - Jan. 18, 2016
-* `Development and Deployment of Cookiecutter-Django via Docker`_ - Dec. 29, 2015
-* `How to create a Django Application using Cookiecutter and Django 1.8`_ - Sept. 12, 2015
-
-Have a blog or online publication? Write about your cookiecutter-django tips and tricks, then send us a pull request with the link.
-
-.. _`Deploying Cookiecutter-Django with Docker-Compose`: http://adamantine.me/2017/10/19/deploying-cookiecutter-django-with-docker-compose/
-.. _`Exploring with Cookiecutter`: http://www.snowboardingcoder.com/django/2016/12/03/exploring-with-cookiecutter/
-.. _`Using Cookiecutter to Jumpstart a Django Project on Windows with PyCharm`: https://joshuahunter.com/posts/using-cookiecutter-to-jumpstart-a-django-project-on-windows-with-pycharm/
-
-.. _`Development and Deployment of Cookiecutter-Django via Docker`: https://realpython.com/blog/python/development-and-deployment-of-cookiecutter-django-via-docker/
-.. _`Development and Deployment of Cookiecutter-Django on Fedora`: https://realpython.com/blog/python/development-and-deployment-of-cookiecutter-django-on-fedora/
-.. _`How to create a Django Application using Cookiecutter and Django 1.8`: https://www.swapps.io/blog/how-to-create-a-django-application-using-cookiecutter-and-django-1-8/
-.. _`Introduction to Cookiecutter-Django`: http://krzysztofzuraw.com/blog/2016/django-cookiecutter.html
-.. _`Django and GitLab - Running Continuous Integration and tests with your FREE account`: http://dezoito.github.io/2016/05/11/django-gitlab-continuous-integration-phantomjs.html
-
-Code of Conduct
----------------
-
-Everyone interacting in the Cookiecutter project's codebases, issue trackers, chat
-rooms, and mailing lists is expected to follow the `PyPA Code of Conduct`_.
-
-
-.. _`PyPA Code of Conduct`: https://www.pypa.io/en/latest/code-of-conduct/
