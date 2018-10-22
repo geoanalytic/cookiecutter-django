@@ -1,8 +1,8 @@
 Cookiecutter Geopaparazzi Reference Server
 ==========================================
 
-Based on Cookiecutter-Django_, Cookiecutter Geopaparazzi Reference Server is a framework for jumpstarting
-production-ready Geopaparazzi cloud projects quickly.
+Based on Cookiecutter-Django_, Cookiecutter Geopaparazzi Reference Server is a framework for quickly jumpstarting
+production-ready web servers to manage Geopaparazzi data.
 
 .. _issues: https://github.com/geoanalytic/cookiecutter-geopaparazzi-server/issues/new
 
@@ -16,9 +16,9 @@ Features
 * 12-Factor_ based settings via django-environ_
 * Secure by default. We believe in SSL.
 * Optimized development and production settings
-* Registration via django-allauth_
+* User registration via django-allauth_
 * Comes with custom user model ready to go
-* Grunt build for compass and livereload
+* Grunt build for compass and LiveReload
 * Send emails via Anymail_ (using Mailgun_ by default, but switchable)
 * Media storage using Amazon S3 or DigitalOcean Spaces
 * Docker support using docker-compose_ for development and production (using Caddy_ with LetsEncrypt_ support)
@@ -62,7 +62,7 @@ Prerequisites
 -------------
 
 * Docker-compose_
-* Python_ (including Pip_ note that if you are using Windows its easiest to just install Anaconda_)
+* Python_ (including Pip_, note that if you are using Windows its easiest to just install Anaconda_)
 * Git_
 
 .. _Docker-compose: https://github.com/docker/compose
@@ -77,7 +77,7 @@ Usage
 Here are the basic instructions for setting up a local development system, discussed in more detail in this `blog
 post <https://geoanalytic.github.io/a-reference-server-for-geopaparazzi-cloud-profiles/>`__.
 Before you begin, open a console window and create a directory to hold
-the project source code and demo data you will download
+the project source code and demo data you will download (we use "grs" as an example below, but you can use choose your own directory name)
 
 ::
 
@@ -90,7 +90,7 @@ the project source code and demo data you will download
 
     $ pip install "cookiecutter>=1.4.0"
 
-2. Run it against the latest repo for the reference server
+2. Use cookiecutter to get the latest source code from the geopaparazzi reference server repository
 
 ::
 
@@ -104,7 +104,7 @@ enter ‘y’ to the following choices (these should be the defaults):
 -  celery
 -  whitenoise
 
-3) CD into the directory created by the cookiecutter process and then
+3) Change directory into the directory created by the cookiecutter process and then
    build and run the containers:
 
 ::
@@ -142,7 +142,7 @@ does one thing:
 -  celerybeat … provides scheduled background processing capability
 -  flower … provides a real-time monitoring tool for the celery tasks
 
-4) Get the database and static assets set up, create a superuser
+4) Setup the database and static assets, create a superuser
 
 ::
 
@@ -185,10 +185,11 @@ Download the demo data from
 Note that you need to install `Httpie <https://httpie.org/>`__ and edit
 the load_local.sh file, replacing ``user:password`` with the values you
 provided for the superuser and your server IP address for the
-``uploadurl`` entries.
+``uploadurl`` entries.  No other values (e.g. path=. etc) need to be changed.
 
 ::
 
+    $ pip install httpie
     $ cd location/of/demo/data
     $ ./load_local.sh
 
